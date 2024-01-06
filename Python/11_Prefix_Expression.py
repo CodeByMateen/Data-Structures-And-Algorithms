@@ -1,66 +1,35 @@
-class Node:
+def evaluate_prefix(expression):
+    stack = []
+    operators = set(['+', '-', '*', '/'])
 
-  def __init__(self, data):
-    self.data = data
-    self.next = None
+    # Helper function to perform basic arithmetic operations
+    def apply_operator(operator, operand1, operand2):
+        if operator == '+':
+            return operand1 + operand2
+        elif operator == '-':
+            return operand1 - operand2
+        elif operator == '*':
+            return operand1 * operand2
+        elif operator == '/':
+            return operand1 / operand2
 
+    # Iterate through the expression in reverse order
+    for char in reversed(expression):
+        if char.isdigit():
+            # If the character is a digit, push it onto the stack
+            stack.append(int(char))
+        elif char in operators:
+            # If the character is an operator, pop two operands from the stack,
+            # perform the operation, and push the result back onto the stack
+            operand1 = stack.pop()
+            operand2 = stack.pop()
+            result = apply_operator(char, operand1, operand2)
+            stack.append(result)
 
-class Queue:
+    # The final result is at the top of the stack
+    return stack[0]
 
-  def __init__(self):
-    self.front = None
-
-  def enqueue(self, data):
-    node = Node(data)
-    if self.front is None:
-      self.front = node
-    else:
-      current = self.front
-      while current.next is not None:
-        current = current.next
-      current.next = node
-
-  def dequeue(self):
-    if self.front is None:
-      return None
-    else:
-      current = self.front
-      self.front = self.front.next
-      return current.data
-
-  def front(self):
-    if self.front is None:
-      return None
-    else:
-      return self.front.data
-
-  def isEmpty(self):
-    if self.front is None:
-      return True
-    else:
-      return False
-
-  def size(self):
-    count = 0
-    current = self.front
-    while current is not None:
-      count += 1
-      current = current.next
-    return count
-
-  def printQueue(self):
-    if self.front is None:
-      print("Queue is empty")
-    current = self.front
-    while current is not None:
-      print(current.data)
-      current = current.next
-
-
-if __name__ == '__main__':
-  q = Queue()
-  q.enqueue(5)
-  q.enqueue(6)
-  # print(q.size())
-  # q.dequeue()
-  q.printQueue()
+# Example usage:
+prefix_expression = "*+42-75"
+result = evaluate_prefix(prefix_expression)
+print(f"The result of the prefix expression {prefix_expression} is: {result}") # 12
